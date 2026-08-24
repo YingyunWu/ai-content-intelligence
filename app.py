@@ -65,3 +65,11 @@ if st.button("🔍 Analyze Article"):
 
         st.subheader("💭 Sentiment")
         st.write(result["sentiment"])
+
+        st.subheader("🎯 Target Audience")
+        st.write(result["target_audience"])
+
+        st.subheader("💡 Audience Needs")
+
+        for need in result["audience_needs"]:
+            st.write(f"- {need}")
