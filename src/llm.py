@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from src.prompts import CONTENT_ANALYSIS_SYSTEM_PROMPT
+
 
 load_dotenv()
 
@@ -23,33 +25,12 @@ def get_client():
 def analyze_article(article: str) -> dict:
     client = get_client()
 
-    system_prompt = """
-You are an AI content analysis assistant.
-
-Analyze the article provided by the user.
-
-Return a JSON object with exactly these fields:
-
-summary:
-A concise summary of the article.
-
-key_points:
-A list containing 3 to 5 important points.
-
-topic:
-The primary topic of the article.
-
-sentiment:
-The overall sentiment. Use only:
-Positive, Neutral, or Negative.
-"""
-
     response = client.chat.completions.create(
         model="deepseek-chat",
         messages=[
             {
                 "role": "system",
-                "content": system_prompt
+                "content": CONTENT_ANALYSIS_SYSTEM_PROMPT
             },
             {
                 "role": "user",
