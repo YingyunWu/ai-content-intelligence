@@ -1,24 +1,6 @@
-import os
-import json
-
 import streamlit as st
-from dotenv import load_dotenv
-from openai import OpenAI
 
-
-# Load API key from .env
-load_dotenv()
-
-api_key = os.getenv("DEEPSEEK_API_KEY")
-
-if not api_key:
-    st.error("DEEPSEEK_API_KEY is not configured.")
-    st.stop()
-
-client = OpenAI(
-    api_key=api_key,
-    base_url="https://api.deepseek.com"
-)
+from src.llm import analyze_article
 
 
 # Page configuration
@@ -58,54 +40,12 @@ if st.button("🔍 Analyze Article"):
 
         with st.spinner("Analyzing article..."):
 
-            prompt = f"""
-You are an AI content analysis assistant.
+            try:
+                result = analyze_article(article)
 
-Analyze the following article and return a JSON object with exactly
-these fields:
-
-- summary
-- key_points
-- topic
-- sentiment
-
-Rules:
-
-summary:
-Provide a concise summary of the article.
-
-key_points:
-Provide 3 to 5 important points.
-
-topic:
-Identify the primary topic of the article.
-
-sentiment:
-Classify the overall sentiment as Positive, Neutral, or Negative.
-
-Article:
-
-{article}
-"""
-
-            response = client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a precise content analysis assistant."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                response_format={"type": "json_object"}
-            )
-
-            result = json.loads(
-                response.choices[0].message.content
-            )
+            except Exception as e:
+                st.error(f"Analysis failed: {e}")
+                st.stop()
 
 
         # Display results
