@@ -4,7 +4,204 @@ import pandas as pd
 from src.llm import analyze_article
 
 
-# Page configuration
+# ============================================================
+# Demo Data
+# ============================================================
+
+DEMO_RESULTS = [
+    {
+        "Topic": "Marriage and changing social attitudes",
+        "Sentiment": "Neutral",
+        "Search Intent": "Informational",
+        "Primary Frame": "Social Impact",
+        "Generic Frames": "Human Interest",
+        "Issue-Specific Frames": "Social Impact",
+        "Primary Keywords": "marriage, young adults, social attitudes"
+    },
+    {
+        "Topic": "Economic pressures and marriage decisions",
+        "Sentiment": "Negative",
+        "Search Intent": "Informational",
+        "Primary Frame": "Economic Consequences",
+        "Generic Frames": "Economic Consequences",
+        "Issue-Specific Frames": "Social Impact, Risk & Threat",
+        "Primary Keywords": "marriage, housing costs, financial pressure"
+    },
+    {
+        "Topic": "Marriage policy and demographic change",
+        "Sentiment": "Neutral",
+        "Search Intent": "Informational",
+        "Primary Frame": "Policy & Regulation",
+        "Generic Frames": "Responsibility",
+        "Issue-Specific Frames": "Policy & Regulation, Social Impact",
+        "Primary Keywords": "marriage policy, demographics, population"
+    },
+    {
+        "Topic": "Technology and changing relationships",
+        "Sentiment": "Positive",
+        "Search Intent": "Informational",
+        "Primary Frame": "Technology & Innovation",
+        "Generic Frames": "Human Interest",
+        "Issue-Specific Frames": "Technology & Innovation",
+        "Primary Keywords": "technology, relationships, dating"
+    },
+    {
+        "Topic": "Risks associated with changing family structures",
+        "Sentiment": "Negative",
+        "Search Intent": "Informational",
+        "Primary Frame": "Risk & Threat",
+        "Generic Frames": "Risk & Threat",
+        "Issue-Specific Frames": "Risk & Threat, Social Impact",
+        "Primary Keywords": "family structure, social risk, marriage"
+    },
+    {
+        "Topic": "Individual choice and marriage",
+        "Sentiment": "Positive",
+        "Search Intent": "Informational",
+        "Primary Frame": "Human Interest",
+        "Generic Frames": "Human Interest, Morality",
+        "Issue-Specific Frames": "Social Impact",
+        "Primary Keywords": "individual choice, marriage, personal values"
+    },
+    {
+        "Topic": "Marriage expectations among young people",
+        "Sentiment": "Neutral",
+        "Search Intent": "Informational",
+        "Primary Frame": "Human Interest",
+        "Generic Frames": "Human Interest",
+        "Issue-Specific Frames": "Social Impact",
+        "Primary Keywords": "young people, marriage expectations"
+    },
+    {
+        "Topic": "Government responses to demographic challenges",
+        "Sentiment": "Neutral",
+        "Search Intent": "Informational",
+        "Primary Frame": "Policy & Regulation",
+        "Generic Frames": "Responsibility",
+        "Issue-Specific Frames": "Policy & Regulation",
+        "Primary Keywords": "government policy, demographics, marriage"
+    },
+    {
+        "Topic": "The economic impact of declining marriage rates",
+        "Sentiment": "Negative",
+        "Search Intent": "Informational",
+        "Primary Frame": "Economic Consequences",
+        "Generic Frames": "Economic Consequences",
+        "Issue-Specific Frames": "Social Impact",
+        "Primary Keywords": "marriage rates, economy, demographics"
+    },
+    {
+        "Topic": "Changing cultural perceptions of marriage",
+        "Sentiment": "Neutral",
+        "Search Intent": "Informational",
+        "Primary Frame": "Morality",
+        "Generic Frames": "Morality, Human Interest",
+        "Issue-Specific Frames": "Social Impact",
+        "Primary Keywords": "marriage, culture, values"
+    }
+]
+
+
+# ============================================================
+# Helper Functions
+# ============================================================
+
+def get_demo_result(index):
+    """Return a simulated analysis result."""
+    return DEMO_RESULTS[index % len(DEMO_RESULTS)]
+
+
+def analyze_content(content, api_mode):
+    """Analyze content using Demo or Live API mode."""
+
+    if api_mode == "Demo / Mock Data":
+        return get_demo_result(0)
+
+    return analyze_article(content)
+
+
+def analyze_multiple_contents(contents, api_mode):
+    """Analyze multiple content items."""
+
+    results = []
+
+    progress = st.progress(0)
+
+    with st.spinner("Analyzing content..."):
+
+        for i, content in enumerate(contents):
+
+            try:
+
+                if api_mode == "Demo / Mock Data":
+
+                    result = get_demo_result(i)
+
+                    results.append(
+                        {
+                            "Source": content["source"],
+                            "Content Type": content["content_type"],
+                            "Date": content["date"],
+                            "Topic": result["Topic"],
+                            "Sentiment": result["Sentiment"],
+                            "Search Intent": result["Search Intent"],
+                            "Primary Frame": result["Primary Frame"],
+                            "Generic Frames": result["Generic Frames"],
+                            "Issue-Specific Frames": result[
+                                "Issue-Specific Frames"
+                            ],
+                            "Primary Keywords": result[
+                                "Primary Keywords"
+                            ]
+                        }
+                    )
+
+                else:
+
+                    result = analyze_article(
+                        content["text"]
+                    )
+
+                    results.append(
+                        {
+                            "Source": content["source"],
+                            "Content Type": content["content_type"],
+                            "Date": content["date"],
+                            "Topic": result["topic"],
+                            "Sentiment": result["sentiment"],
+                            "Search Intent": result["search_intent"],
+                            "Primary Frame": result["primary_frame"],
+                            "Generic Frames": ", ".join(
+                                result["generic_frames"]
+                            ),
+                            "Issue-Specific Frames": ", ".join(
+                                result["issue_specific_frames"]
+                            ),
+                            "Primary Keywords": ", ".join(
+                                result["primary_keywords"]
+                            )
+                        }
+                    )
+
+            except Exception as e:
+
+                st.error(
+                    f"Analysis failed for Content {i + 1}: {e}"
+                )
+
+                st.stop()
+
+            progress.progress(
+                (i + 1) / len(contents)
+            )
+
+    return results
+
+
+# ============================================================
+# Page Configuration
+# ============================================================
+
 st.set_page_config(
     page_title="AI Content Intelligence",
     page_icon="📰",
@@ -12,7 +209,10 @@ st.set_page_config(
 )
 
 
+# ============================================================
 # Header
+# ============================================================
+
 st.title("📰 AI Content Intelligence Platform")
 
 st.write(
@@ -21,153 +221,486 @@ st.write(
 )
 
 
-# Analysis mode
+# ============================================================
+# Sidebar
+# ============================================================
+
 st.sidebar.header("⚙️ Analysis Mode")
 
 analysis_mode = st.sidebar.radio(
     "Choose an analysis mode:",
     [
-        "Single Article",
-        "Multi-Article Comparison"
+        "Single Content",
+        "Multi-Content Comparison"
     ]
 )
 
 
-# ============================================================
-# Single Article Analysis
-# ============================================================
+st.sidebar.header("🔧 API Mode")
 
-if analysis_mode == "Single Article":
+api_mode = st.sidebar.radio(
+    "Choose how to run the analysis:",
+    [
+        "Demo / Mock Data",
+        "Live API"
+    ]
+)
 
-    st.subheader("📰 Single Article Analysis")
 
-    article = st.text_area(
-        "Paste your article below:",
-        height=300,
-        placeholder="Paste an article or news text here..."
+if api_mode == "Demo / Mock Data":
+
+    st.sidebar.info(
+        "Demo mode uses simulated results. "
+        "No API calls are made."
     )
 
-    if st.button("🔍 Analyze Article"):
+else:
 
-        if not article.strip():
-            st.warning("Please enter an article first.")
+    st.sidebar.warning(
+        "Live API mode uses your DeepSeek API "
+        "and may consume credits."
+    )
+
+
+# ============================================================
+# Content Type Options
+# ============================================================
+
+CONTENT_TYPES = [
+    "News Article",
+    "Social Media Post",
+    "Comment",
+    "Forum Post",
+    "Other"
+]
+
+
+# ============================================================
+# Single Content Analysis
+# ============================================================
+
+if analysis_mode == "Single Content":
+
+    st.subheader("📰 Single Content Analysis")
+
+    st.write(
+        "Analyze a news article, social media post, comment, "
+        "or other user-generated content."
+    )
+
+
+    # ------------------------------------------------
+    # Content Metadata
+    # ------------------------------------------------
+
+    col1, col2 = st.columns(2)
+
+
+    with col1:
+
+        content_type = st.selectbox(
+            "Content Type",
+            CONTENT_TYPES
+        )
+
+
+    with col2:
+
+        source = st.text_input(
+            "Source / Platform",
+            placeholder="e.g. BBC, Xiaohongshu, Reddit, X"
+        )
+
+
+    # ------------------------------------------------
+    # Content Input
+    # ------------------------------------------------
+
+    content = st.text_area(
+        "Content",
+        height=300,
+        placeholder="Paste your content here..."
+    )
+
+
+    if st.button("🔍 Analyze Content"):
+
+        if not content.strip():
+
+            st.warning(
+                "Please enter some content first."
+            )
 
         else:
 
-            with st.spinner("Analyzing article..."):
+            with st.spinner("Analyzing content..."):
 
                 try:
-                    result = analyze_article(article)
+
+                    if api_mode == "Demo / Mock Data":
+
+                        result = get_demo_result(0)
+
+                    else:
+
+                        result = analyze_article(
+                            content
+                        )
 
                 except Exception as e:
-                    st.error(f"Analysis failed: {e}")
+
+                    st.error(
+                        f"Analysis failed: {e}"
+                    )
+
                     st.stop()
 
 
-            # Display results
+            # ------------------------------------------------
+            # Basic Content Analysis
+            # ------------------------------------------------
+
             st.subheader("📄 Summary")
-            st.write(result["summary"])
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    "This is a demonstration of how the platform "
+                    "can analyze different types of content."
+                )
+
+            else:
+
+                st.write(
+                    result["summary"]
+                )
 
 
             st.subheader("🔑 Key Points")
 
-            for point in result["key_points"]:
-                st.write(f"- {point}")
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    "- Identifies the main ideas and themes."
+                )
+
+                st.write(
+                    "- Extracts important information from the content."
+                )
+
+                st.write(
+                    "- Produces structured content intelligence."
+                )
+
+            else:
+
+                for point in result["key_points"]:
+
+                    st.write(
+                        f"- {point}"
+                    )
 
 
             st.subheader("🏷️ Topic")
-            st.write(result["topic"])
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    result["Topic"]
+                )
+
+            else:
+
+                st.write(
+                    result["topic"]
+                )
 
 
             st.subheader("💭 Sentiment")
-            st.write(result["sentiment"])
 
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    result["Sentiment"]
+                )
+
+            else:
+
+                st.write(
+                    result["sentiment"]
+                )
+
+
+            # ------------------------------------------------
+            # Audience Analysis
+            # ------------------------------------------------
 
             st.subheader("🎯 Target Audience")
-            st.write(result["target_audience"])
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    "People interested in social trends, "
+                    "public discourse, and changing attitudes."
+                )
+
+            else:
+
+                st.write(
+                    result["target_audience"]
+                )
 
 
             st.subheader("💡 Audience Needs")
 
-            for need in result["audience_needs"]:
-                st.write(f"- {need}")
+            if api_mode == "Demo / Mock Data":
 
+                st.write(
+                    "- Understand the main issue."
+                )
+
+                st.write(
+                    "- Understand the social context."
+                )
+
+                st.write(
+                    "- Identify relevant trends and perspectives."
+                )
+
+            else:
+
+                for need in result["audience_needs"]:
+
+                    st.write(
+                        f"- {need}"
+                    )
+
+
+            # ------------------------------------------------
+            # SEO Analysis
+            # ------------------------------------------------
 
             st.subheader("🔎 Primary Keywords")
-            st.write(", ".join(result["primary_keywords"]))
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    "marriage, young adults, social attitudes"
+                )
+
+            else:
+
+                st.write(
+                    ", ".join(
+                        result["primary_keywords"]
+                    )
+                )
 
 
             st.subheader("🔗 Secondary Keywords")
-            st.write(", ".join(result["secondary_keywords"]))
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    "relationships, society, demographic change"
+                )
+
+            else:
+
+                st.write(
+                    ", ".join(
+                        result["secondary_keywords"]
+                    )
+                )
+
+
+            st.subheader("🔍 Search Intent")
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    result["Search Intent"]
+                )
+
+            else:
+
+                st.write(
+                    result["search_intent"]
+                )
+
+
+            # ------------------------------------------------
+            # Framing Analysis
+            # ------------------------------------------------
+
+            st.subheader("🧩 Content Framing")
+
+
+            st.markdown(
+                "**Primary Frame**"
+            )
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    result["Primary Frame"]
+                )
+
+            else:
+
+                st.write(
+                    result["primary_frame"]
+                )
+
+
+            st.markdown(
+                "**Generic News Frames**"
+            )
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    f"- {result['Generic Frames']}"
+                )
+
+            elif result["generic_frames"]:
+
+                for frame in result["generic_frames"]:
+
+                    st.write(
+                        f"- {frame}"
+                    )
+
+            else:
+
+                st.write(
+                    "No clear generic frame identified."
+                )
+
+
+            st.markdown(
+                "**Issue-Specific Frames**"
+            )
+
+            if api_mode == "Demo / Mock Data":
+
+                st.write(
+                    f"- {result['Issue-Specific Frames']}"
+                )
+
+            elif result["issue_specific_frames"]:
+
+                for frame in result["issue_specific_frames"]:
+
+                    st.write(
+                        f"- {frame}"
+                    )
+
+            else:
+
+                st.write(
+                    "No clear issue-specific frame identified."
+                )
 
 
 # ============================================================
-# Multi-Article Comparison
+# Multi-Content Comparison
 # ============================================================
 
 else:
 
-    st.subheader("📊 Multi-Article Comparison")
+    st.subheader("📊 Multi-Content Comparison")
 
     st.write(
-        "Compare 2–10 articles to identify patterns and differences "
-        "across sources."
+        "Compare 2–10 pieces of content across news media, "
+        "social media, comments, and other sources."
     )
 
 
-    # Number of articles
-    num_articles = st.slider(
-        "Number of articles",
+    # ------------------------------------------------
+    # Number of Contents
+    # ------------------------------------------------
+
+    num_contents = st.slider(
+        "Number of contents",
         min_value=2,
         max_value=10,
         value=2
     )
 
 
-    articles = []
+    contents = []
 
 
-    # Article input fields
-    for i in range(num_articles):
+    # ------------------------------------------------
+    # Content Input
+    # ------------------------------------------------
 
-        st.markdown(f"### Article {i + 1}")
+    for i in range(num_contents):
 
-        source = st.text_input(
-            "Source",
-            placeholder="e.g. Reuters, BBC, The Guardian",
-            key=f"source_{i}"
+        st.markdown(
+            f"### Content {i + 1}"
         )
+
+
+        col1, col2 = st.columns(2)
+
+
+        with col1:
+
+            content_type = st.selectbox(
+                "Content Type",
+                CONTENT_TYPES,
+                key=f"content_type_{i}"
+            )
+
+
+        with col2:
+
+            source = st.text_input(
+                "Source / Platform",
+                placeholder="e.g. BBC, Xiaohongshu, Reddit",
+                key=f"source_{i}"
+            )
+
 
         date = st.date_input(
             "Publication Date",
             key=f"date_{i}"
         )
 
-        article_text = st.text_area(
-            "Article Text",
+
+        content_text = st.text_area(
+            "Content",
             height=200,
-            placeholder="Paste article text here...",
-            key=f"article_{i}"
+            placeholder="Paste content here...",
+            key=f"content_{i}"
         )
 
-        articles.append(
+
+        contents.append(
             {
                 "source": source,
+                "content_type": content_type,
                 "date": date,
-                "article": article_text
+                "text": content_text
             }
         )
 
 
-    # Analyze button
-    if st.button("🔍 Analyze Articles"):
+    # ------------------------------------------------
+    # Analyze Contents
+    # ------------------------------------------------
 
-        # Check whether all articles have content
+    if st.button("🔍 Analyze Contents"):
+
         incomplete = False
 
-        for article in articles:
 
-            if not article["article"].strip():
+        for content_item in contents:
+
+            if not content_item["text"].strip():
+
                 incomplete = True
                 break
 
@@ -175,58 +708,60 @@ else:
         if incomplete:
 
             st.warning(
-                "Please enter text for all articles before analyzing."
+                "Please enter text for all content items "
+                "before analyzing."
             )
+
 
         else:
 
-            results = []
-
-            progress = st.progress(0)
-
-            with st.spinner("Analyzing articles..."):
-
-                for i, article in enumerate(articles):
-
-                    try:
-
-                        result = analyze_article(
-                            article["article"]
-                        )
-
-                        results.append(
-                            {
-                                "Source": article["source"],
-                                "Date": article["date"],
-                                "Topic": result["topic"],
-                                "Sentiment": result["sentiment"],
-                                "Primary Keywords": ", ".join(
-                                    result["primary_keywords"]
-                                )
-                            }
-                        )
-
-                    except Exception as e:
-
-                        st.error(
-                            f"Analysis failed for Article {i + 1}: {e}"
-                        )
-
-                        st.stop()
+            results = analyze_multiple_contents(
+                contents,
+                api_mode
+            )
 
 
-                    progress.progress(
-                        (i + 1) / len(articles)
-                    )
+            # ------------------------------------------------
+            # Comparison Dataset
+            # ------------------------------------------------
+
+            df = pd.DataFrame(
+                results
+            )
 
 
-            # Create comparison dataset
-            df = pd.DataFrame(results)
+            st.subheader(
+                "📊 Content Comparison"
+            )
 
-
-            st.subheader("📊 Article Comparison")
 
             st.dataframe(
                 df,
+                use_container_width=True
+            )
+
+
+            # ------------------------------------------------
+            # Primary Frame Distribution
+            # ------------------------------------------------
+
+            st.subheader(
+                "📈 Primary Frame Distribution"
+            )
+
+
+            frame_counts = (
+                df["Primary Frame"]
+                .value_counts()
+                .rename_axis("Frame")
+                .reset_index(name="Contents")
+            )
+
+
+            st.bar_chart(
+                frame_counts,
+                x="Frame",
+                y="Contents",
+                horizontal=True,
                 use_container_width=True
             )
