@@ -1,308 +1,520 @@
-# 📰 AI Content Intelligence & Computational Media Platform
+# 📰 AI Content Intelligence
 
-An LLM-powered web application that transforms unstructured articles into structured content insights, generated copy, and computational media analysis.
+An LLM-powered platform for analyzing and comparing news articles, social media posts, forum posts, comments, and other online content.
 
-By combining **Natural Language Processing (NLP)**, **structured LLM outputs**, and **communication theory**, this project explores how large language models can support both practical content workflows and computational analysis of media texts.
+The project combines **Python, LLM-based NLP, structured outputs, semantic embeddings, similarity analysis, and interactive data visualization** to transform unstructured content into structured and comparable insights.
 
-The platform is designed as an interdisciplinary AI application at the intersection of:
-
-**Artificial Intelligence · NLP · Data Analysis · Computational Media · Communication Research**
+> **AI · NLP · Semantic Analysis · Content Intelligence · Computational Media**
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red?style=flat-square)
-![OpenAI API](https://img.shields.io/badge/LLM-OpenAI%20API-green?style=flat-square)
+![LLM](https://img.shields.io/badge/LLM-DeepSeek%20API-green?style=flat-square)
 ![Pandas](https://img.shields.io/badge/Data-Pandas-purple?style=flat-square)
+![Scikit-learn](https://img.shields.io/badge/ML-scikit--learn-orange?style=flat-square)
+![Sentence Transformers](https://img.shields.io/badge/NLP-Sentence%20Transformers-yellow?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 ---
 
-## 🌟 Project Overview
+## 🌟 Overview
 
-Traditional content analysis often requires manually reading, coding, categorizing, and comparing large amounts of text.
+Online content is increasingly fragmented across news websites, social media platforms, forums, and user-generated discussions.
 
-This project explores whether an LLM-powered pipeline can automate parts of this workflow while maintaining **structured, interpretable, and evaluable outputs**.
+Analyzing these sources manually can make it difficult to identify recurring topics, differences in framing, and broader patterns across multiple pieces of content.
 
-The system takes an article as input and generates multiple layers of analysis:
+This project explores an AI-assisted approach to content intelligence.
+
+Users can analyze a single piece of content or compare **2–10 pieces of content** simultaneously.
+
+The system converts unstructured text into structured analytical dimensions and uses semantic embeddings to identify related topics across different pieces of content.
 
 ```text
-Article
-   │
-   ▼
-LLM Analysis Pipeline
-   │
-   ├── Summary
-   ├── Key Points
-   ├── Topic Classification
-   ├── Sentiment Analysis
-   ├── Target Audience
-   ├── SEO Keywords
-   ├── Social Media Copy
-   │
-   └── Computational Media Analysis
-           ├── Framing
-           ├── Key Actors
-           └── Perspective / Source Analysis
+                 Online Content
+                       │
+        ┌──────────────┼──────────────┐
+        ▼              ▼              ▼
+     Article      Social Post     Forum / Comment
+        │              │              │
+        └──────────────┼──────────────┘
+                       ▼
+              LLM Content Analysis
+                       │
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+       Content      Metadata      Framing
+      Intelligence  Analysis      Analysis
+          │
+          ▼
+     Topic Extraction
+          │
+          ▼
+   Semantic Embeddings
+          │
+          ▼
+    Similarity Analysis
+          │
+          ▼
+    Topic Grouping
+          │
+          ▼
+  Cross-Content Insights
 ```
 
 ---
 
 ## 🚀 Core Features
 
-### 1. 📌 Content Intelligence
+### 1. 📌 Single Content Analysis
 
-The platform extracts structured information from unstructured articles.
+The platform supports analysis of individual pieces of online content.
 
-* **Automated Summarization**
-  Generates concise summaries of long-form articles.
+Supported content types include:
 
-* **Key Point Extraction**
-  Identifies the main arguments, facts, and takeaways.
+- News Article
+- Social Media Post
+- Forum Post
+- Comment
+- Other
 
-* **Topic Classification**
-  Categorizes articles into predefined or dynamically identified topics.
+For each piece of content, the system can generate:
 
-* **Sentiment Analysis**
-  Analyzes the overall emotional tone of the content.
+- Summary
+- Key Points
+- Topic
+- Sentiment
+- Target Audience
+- Audience Needs
+- Primary Keywords
+- Secondary Keywords
+- Search Intent
+- Content Framing
 
-* **Target Audience Analysis**
-  Estimates the primary audience based on topic, language, and content characteristics.
+The system also detects the primary language of the input and generates natural-language analytical results in the same language.
 
-* **SEO Keyword Extraction**
-  Identifies primary, secondary, and long-tail keywords.
-
-* **Cross-Platform Copy Generation**
-  Adapts the same source content for different communication contexts, such as LinkedIn or Xiaohongshu/RED.
+Standardized classification labels such as sentiment and search intent remain in English to support cross-content comparison.
 
 ---
 
-## 🔬 Computational Media Analysis
+### 2. 📊 Multi-Content Comparison
 
-A key component of this project is the application of computational methods to concepts from **communication and media studies**.
+Users can analyze between **2 and 10 pieces of content** in a single analysis session.
 
-### News Framing Analysis
+Each piece of content can include:
 
-The system explores news framing using concepts derived from **Robert Entman's framing theory**.
+- Content Type
+- Source
+- Publication Date
+- Content Text
 
-Rather than treating an article as a collection of keywords, the analysis examines how an issue is constructed through different framing dimensions:
+The platform generates a structured comparison table containing analytical dimensions such as:
+
+- Topic
+- Sentiment
+- Search Intent
+- Primary Frame
+- Generic Frames
+- Issue-Specific Frames
+- Primary Keywords
+
+This makes it possible to compare how different sources or platforms discuss related issues.
+
+---
+
+### 3. 📈 Sentiment Distribution
+
+The system aggregates sentiment classifications across multiple pieces of content.
+
+Possible sentiment categories are:
 
 ```text
-Problem Definition
-        │
-        ▼
-Causal Interpretation
-        │
-        ▼
-Moral Evaluation
-        │
-        ▼
-Treatment / Policy Recommendation
+Positive
+Neutral
+Negative
 ```
 
-The system aims to identify:
+The distribution is visualized interactively to provide a quick overview of the overall emotional orientation of the analyzed content set.
 
-* Primary and secondary frames
-* Problem definitions
-* Causal interpretations
-* Evaluative language
-* Suggested or implied responses
-* Key actors and institutions
+---
 
-Example frame categories may include:
+### 4. 🔍 Search Intent Analysis
+
+The platform classifies the likely search intent associated with the content.
+
+The current classification scheme includes:
 
 ```text
-Economic Impact
-Public Policy
-Public Safety
+Informational
+Navigational
+Commercial
+Transactional
+```
+
+This provides an additional perspective on how users may seek or interact with information related to the analyzed content.
+
+---
+
+### 5. 🧩 Content Framing Analysis
+
+The platform incorporates a structured framing analysis inspired by concepts from communication and media research.
+
+Rather than treating content only as a collection of keywords, the system examines which interpretive frames are emphasized.
+
+#### Generic News Frames
+
+The current categories include:
+
+```text
+Responsibility
+Conflict
+Human Interest
+Economic Consequences
+Morality
+```
+
+#### Issue-Specific Frames
+
+The current categories include:
+
+```text
+Technology & Innovation
+Risk & Threat
+Policy & Regulation
 Social Impact
-Environmental Impact
-Technological Innovation
 ```
 
-### Frame Distribution
+For each piece of content, the system identifies:
 
-For multiple analyzed articles, the system can aggregate framing results and visualize the distribution of different frames.
+- Primary Frame
+- Generic Frames
+- Issue-Specific Frames
+
+Only frames supported by the content are selected.
+
+The system does not force a frame when sufficient evidence is unavailable.
+
+---
+
+### 6. 📊 Cross-Content Frame Analysis
+
+When multiple pieces of content are analyzed, framing results can be aggregated across the dataset.
+
+This allows users to examine how frequently different frames occur and compare framing patterns across sources or content types.
 
 For example:
 
 ```text
-Economic Impact       ████████████ 40%
-Public Policy         ████████     27%
-Social Impact         █████        18%
-Public Safety         ████         15%
+Economic Consequences
+████████████████
+
+Technology & Innovation
+██████████
+
+Social Impact
+██████
+
+Risk & Threat
+████
 ```
 
-This creates a bridge between qualitative communication concepts and quantitative computational analysis.
+This provides a bridge between qualitative framing concepts and quantitative content analysis.
 
-### Source & Perspective Analysis
+---
 
-A later module will examine how different actors and institutions are represented within media texts.
+## 🧠 Semantic Topic Analysis
 
-Potential dimensions include:
+One of the core NLP components of the project is semantic topic grouping.
 
-* Government representation
-* Expert representation
-* Business representation
-* Citizen perspectives
-* Institutional source diversity
-* Potential perspective patterns
+Simple keyword matching can fail when different pieces of content describe the same idea using different vocabulary.
 
-The system will treat these outputs as **analytical indicators rather than definitive judgments of media bias**.
+For example:
+
+```text
+Economic pressure on marriage
+
+Housing costs affecting marriage decisions
+
+Changing attitudes toward marriage
+
+Choosing to remain single
+```
+
+These expressions do not share identical keywords, but some of them describe closely related concepts.
+
+The platform therefore uses sentence embeddings to represent topics in a semantic vector space.
+
+```text
+Content
+   │
+   ▼
+LLM Topic Extraction
+   │
+   ▼
+Sentence Embedding
+   │
+   ▼
+Semantic Vector
+   │
+   ▼
+Cosine Similarity
+   │
+   ▼
+Similarity-based Grouping
+   │
+   ▼
+Representative Topic
+```
+
+The current implementation uses **Sentence Transformers** to generate embeddings and **cosine similarity** to measure semantic relatedness.
+
+Related topics can then be grouped together and represented by a representative topic.
+
+Example:
+
+```text
+Topic Group 1
+
+Representative:
+Economic pressure on marriage
+
+- Economic pressure on marriage
+- Housing costs affecting marriage decisions
+- Changing attitudes toward marriage
+
+
+Topic Group 2
+
+Representative:
+Choosing to remain single
+
+- Choosing to remain single
+```
+
+This component enables the system to move beyond surface-level keyword matching toward semantic comparison.
+
+---
+
+## 📊 Cross-Content Insights
+
+After analyzing multiple pieces of content, the platform provides several aggregate views.
+
+These currently include:
+
+- Article / Content Comparison
+- Primary Frame Distribution
+- Sentiment Distribution
+- Search Intent Distribution
+- Shared Topics
+- Semantic Topic Groups
+
+The goal is to identify patterns that may not be obvious when examining individual pieces of content separately.
 
 ---
 
 ## 🏗️ System Architecture
 
 ```text
-                    User Input
-               Article / News Text
+                         User
+                          │
+                          ▼
+                ┌──────────────────┐
+                │  Streamlit Web UI │
+                └────────┬─────────┘
                          │
                          ▼
-              ┌────────────────────┐
-              │  Streamlit Web UI  │
-              └──────────┬─────────┘
+                ┌──────────────────┐
+                │ Content Input    │
+                │ & Metadata       │
+                └────────┬─────────┘
                          │
                          ▼
-              ┌────────────────────┐
-              │ Prompt Engineering │
-              │ & Analysis Pipeline│
-              └──────────┬─────────┘
+                ┌──────────────────┐
+                │ Prompt Engineering│
+                │ & Analysis Rules │
+                └────────┬─────────┘
                          │
                          ▼
-              ┌────────────────────┐
-              │     LLM API        │
-              │  Structured Output │
-              └──────────┬─────────┘
+                ┌──────────────────┐
+                │     LLM API      │
+                │ Structured JSON  │
+                └────────┬─────────┘
                          │
                          ▼
-              ┌────────────────────┐
-              │   JSON Parsing     │
-              │ & Validation       │
-              └──────────┬─────────┘
+                ┌──────────────────┐
+                │ Content Analysis │
+                └────────┬─────────┘
                          │
-              ┌──────────┴──────────┐
-              ▼                     ▼
-     Content Intelligence    Media Analysis
-          Module                  Module
-              │                     │
-              │                     ├── Framing
-              │                     ├── Actors
-              │                     └── Perspective
-              │
-              ├── Summary
-              ├── Topics
-              ├── Sentiment
-              ├── Audience
-              ├── Keywords
-              └── Copy Generation
-              │
-              └──────────┬──────────┘
+        ┌────────────────┼────────────────┐
+        ▼                ▼                ▼
+    Sentiment         Framing          Keywords
+        │                │                │
+        └────────────────┼────────────────┘
+                         │
                          ▼
-              ┌────────────────────┐
-              │ Interactive         │
-              │ Streamlit Dashboard │
-              └────────────────────┘
+                  Topic Extraction
+                         │
+                         ▼
+                Sentence Embeddings
+                         │
+                         ▼
+                 Cosine Similarity
+                         │
+                         ▼
+                 Semantic Grouping
+                         │
+                         ▼
+              Cross-Content Analysis
+                         │
+                         ▼
+                 Streamlit Dashboard
 ```
 
 ---
 
-## 📊 Structured Output
+## 🔬 Technical Approach
 
-A major design principle of this project is to avoid relying solely on free-form LLM responses.
+The project combines several layers of AI and data processing.
 
-The analysis pipeline is designed to transform model output into structured JSON that can be processed programmatically.
+### LLM-based NLP
 
-Example:
+The LLM is responsible for extracting structured information from unstructured content.
+
+The system uses prompt engineering to define:
+
+- Output fields
+- Classification categories
+- Language behavior
+- Framing categories
+- Output constraints
+
+The model returns structured JSON that can be processed programmatically.
+
+### Structured Outputs
+
+Instead of relying on free-form responses, the analysis pipeline requests a JSON object with predefined fields.
+
+A simplified output structure is:
 
 ```json
 {
   "summary": "...",
-  "key_points": [
-    "...",
-    "...",
-    "..."
-  ],
-  "topic": "Technology",
+  "key_points": ["...", "..."],
+  "topic": "...",
   "sentiment": "Neutral",
-  "target_audience": [
-    "Technology professionals",
-    "Students"
-  ],
-  "seo_keywords": [
-    "artificial intelligence",
-    "large language models",
-    "NLP"
-  ],
-  "framing": {
-    "primary_frame": "Technological Innovation",
-    "secondary_frames": [
-      "Economic Impact",
-      "Social Impact"
-    ]
-  }
+  "target_audience": "...",
+  "audience_needs": ["...", "..."],
+  "primary_keywords": ["...", "..."],
+  "secondary_keywords": ["...", "..."],
+  "search_intent": "Informational",
+  "primary_frame": "...",
+  "generic_frames": ["..."],
+  "issue_specific_frames": ["..."]
 }
 ```
 
-This structured approach makes the output easier to:
+This makes model-generated information easier to:
 
-* Store
-* Analyze
-* Visualize
-* Compare
-* Evaluate
-* Reuse in downstream applications
+- Process
+- Compare
+- Aggregate
+- Visualize
+- Reuse in downstream applications
 
 ---
 
-## 🧪 Evaluation
+### Semantic Embeddings
 
-An important goal of this project is to investigate not only **what an LLM can generate**, but also **how reliably it can perform structured content analysis**.
+Topic strings are transformed into dense vector representations using a Sentence Transformer model.
 
-A manually annotated sample dataset will be developed to compare human annotations with model-generated outputs.
+Semantic similarity is then calculated using cosine similarity.
 
-Potential evaluation tasks include:
-
-* Topic classification
-* Sentiment classification
-* Frame classification
-
-Planned evaluation metrics:
+Conceptually:
 
 ```text
-Accuracy
-Precision
-Recall
-F1 Score
+Topic A → Embedding A
+Topic B → Embedding B
+
+             ↓
+
+       Cosine Similarity
+
+             ↓
+
+   Semantic Relatedness
 ```
 
-The evaluation component will help identify where LLM-based analysis performs well and where human review remains necessary.
+This allows the system to identify conceptually similar topics even when they use different wording.
 
 ---
 
-## 🛠️ Tech Stack
+## 🧪 Example Use Case
 
-**Programming**
+The platform can be used to explore how a social issue is discussed across different types of online content.
 
-`Python`
+For example, a researcher could provide several pieces of content discussing marriage and demographic change:
 
-**Data Processing**
+```text
+News Article
+       │
+       ├── Economic pressure
+       │
+       └── Demographic change
 
-`Pandas` · `JSON` · `NumPy`
+Social Media Post
+       │
+       └── Individual choice
 
-**AI / NLP**
+Forum Discussion
+       │
+       ├── Housing costs
+       └── Marriage expectations
 
-`LLM APIs` · `Prompt Engineering` · `Structured Outputs` · `NLP`
+Comment
+       │
+       └── Changing attitudes
+```
 
-**Web Application**
+The system can then compare:
 
-`Streamlit`
+- Topics
+- Sentiment
+- Search intent
+- Frames
+- Keywords
+- Semantic topic relationships
 
-**Database / Data**
+The marriage topic is used as a **case study**, while the underlying platform is designed to support broader content-analysis tasks.
 
-`SQLite` · `CSV`
+---
 
-**Development**
+## 💻 Technology Stack
 
-`Git` · `GitHub` · `PyCharm`
+### Programming
+
+- Python
+
+### AI / NLP
+
+- LLM API
+- Prompt Engineering
+- Structured JSON Outputs
+- Sentence Transformers
+- Semantic Embeddings
+- Cosine Similarity
+
+### Data Analysis
+
+- Pandas
+- Scikit-learn
+
+### Web Application
+
+- Streamlit
+
+### Development
+
+- Git
+- GitHub
+- PyCharm
 
 ---
 
@@ -316,126 +528,201 @@ ai-content-intelligence/
 ├── requirements.txt
 ├── .gitignore
 │
-├── src/
-│   ├── analyzer.py
-│   ├── llm.py
-│   ├── prompts.py
-│   └── utils.py
-│
-├── data/
-│   └── sample_articles/
-│
-└── tests/
-    └── test_analyzer.py
+└── src/
+    ├── __init__.py
+    ├── data.py
+    ├── llm.py
+    ├── prompts.py
+    └── semantic.py
 ```
 
-The project structure will evolve as additional analysis modules and evaluation components are implemented.
+### Module Responsibilities
+
+`app.py`
+
+Main Streamlit application and user interface.
+
+`src/llm.py`
+
+Handles communication with the LLM API and structured JSON responses.
+
+`src/prompts.py`
+
+Contains the analysis prompt and classification rules.
+
+`src/semantic.py`
+
+Handles semantic embeddings, similarity calculation, and topic grouping.
+
+`src/data.py`
+
+Contains data-processing functionality used by the application.
+
+---
+
+## ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YingyunWu/ai-content-intelligence.git
+cd ai-content-intelligence
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment on macOS / Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Create a `.env` file:
+
+```text
+DEEPSEEK_API_KEY=your_api_key_here
+```
+
+The API key should never be committed to GitHub.
+
+---
+
+## ▶️ Usage
+
+Start the Streamlit application:
+
+```bash
+streamlit run app.py
+```
+
+The application will open in a browser.
+
+Users can then select between:
+
+```text
+Single Content
+```
+
+or
+
+```text
+Multi-Content Comparison
+```
+
+and provide the corresponding content for analysis.
 
 ---
 
 ## 🗺️ Roadmap
 
-### Phase 1 — Core LLM Pipeline
+The current version focuses on the core content intelligence and semantic analysis pipeline.
 
-* [ ] Article input
-* [ ] LLM API integration
-* [ ] Structured JSON output
-* [ ] Summary generation
-* [ ] Key point extraction
-* [ ] Topic classification
-* [ ] Sentiment analysis
+Potential future development includes:
 
-### Phase 2 — Content Intelligence
+- [ ] Human-annotated evaluation dataset
+- [ ] Quantitative evaluation of classification performance
+- [ ] Precision / Recall / F1 evaluation
+- [ ] Improved semantic clustering algorithms
+- [ ] Topic evolution across time
+- [ ] Cross-platform comparison
+- [ ] Source-level analysis
+- [ ] Improved visualization
+- [ ] Batch data ingestion
+- [ ] Automated data collection from public sources
 
-* [ ] Target audience analysis
-* [ ] SEO keyword extraction
-* [ ] Cross-platform copy generation
-* [ ] Streamlit dashboard
-
-### Phase 3 — Computational Media Analysis
-
-* [ ] News framing analysis
-* [ ] Frame classification
-* [ ] Key actor extraction
-* [ ] Frame distribution visualization
-* [ ] Source & perspective analysis
-
-### Phase 4 — Evaluation
-
-* [ ] Build manually annotated dataset
-* [ ] Human vs. LLM comparison
-* [ ] Accuracy / Precision / Recall / F1
-* [ ] Error analysis
-
-### Phase 5 — Multi-Article Analysis
-
-* [ ] Batch article processing
-* [ ] Cross-article comparison
-* [ ] Topic distribution
-* [ ] Frame distribution
-* [ ] Keyword trends
-* [ ] Comparative media analysis
+The roadmap is intentionally separate from the current implementation so that future capabilities can be evaluated independently.
 
 ---
 
 ## 🎯 Project Goals
 
-This project has two complementary goals.
+The project has two complementary goals.
 
-**Engineering Goal**
+### Engineering
 
-To build practical experience in:
+To develop practical experience with:
 
-> Python → APIs → JSON → Data Processing → LLM Applications → Web Applications → Evaluation
+```text
+Python
+  ↓
+APIs
+  ↓
+Structured Data
+  ↓
+LLM Applications
+  ↓
+NLP
+  ↓
+Semantic Embeddings
+  ↓
+Data Analysis
+  ↓
+Interactive Visualization
+```
 
-**Research Goal**
+### Computational Analysis
 
-To explore how computational methods and LLMs can support the analysis of:
+To explore how AI and computational methods can support the analysis of large-scale online content.
 
-> Media Content → Framing → Perspectives → Information Patterns
-
-Ultimately, the project aims to demonstrate how **AI and computational methods can be applied to problems traditionally studied through communication and social science approaches**.
+The project focuses on transforming qualitative textual information into structured representations that can be compared, grouped, and visualized.
 
 ---
 
-## 📚 Background & Motivation
+## 🌱 Motivation
 
-This project is informed by my academic background in **Journalism & Communication** and **Agricultural Water Resources Engineering**, as well as professional experience in public-sector governance.
+The project grew from an interdisciplinary background spanning **Journalism & Communication, engineering, and public-sector governance**.
 
-The combination of communication theory, engineering thinking, and computational methods motivates my interest in **AI applications, computational media, and interdisciplinary data analysis**.
+This combination motivates an interest in applying computational methods to real-world information and social problems.
+
+The project therefore sits at the intersection of:
+
+```text
+Artificial Intelligence
+        +
+Natural Language Processing
+        +
+Data Analysis
+        +
+Computational Media
+        +
+Interdisciplinary Research
+```
+
+Rather than building a domain-specific classifier for a single topic, the goal is to develop a reusable **content intelligence framework** that can be applied to different subjects and content environments.
+
+---
+
+## 📌 Current Status
+
+**Version: v0.2**
+
+The current version supports:
+
+- Single-content analysis
+- Multiple content types
+- 2–10 content comparison
+- Structured LLM analysis
+- Multilingual output matching
+- Sentiment analysis
+- Search intent classification
+- Content framing
+- Semantic topic grouping
+- Cross-content visualization
+
+The project is actively being developed.
 
 ---
 
 ## 📄 License
 
 This project is licensed under the MIT License.
-
-我会特别建议你现在就用这一版作为“项目蓝图”，但**不要把所有代码结构一次性照着建出来**。
-
-你现在实际上只有：
-
-```text
-app.py
-README.md
-requirements.txt
-```
-
-完全没问题。
-
-我们接下来可以按照 README 的 Roadmap 一步一步实现。第一阶段只做：
-
-```text
-Article
-  ↓
-Python
-  ↓
-LLM API
-  ↓
-Structured JSON
-  ↓
-Summary + Key Points + Topic + Sentiment
-```
-
-等这个真正跑通以后，再创建 `src/`、`data/`、`tests/`。
-
-这样最终 GitHub 上的 README、代码和 commit history 会彼此对应，项目会显得非常真实。
