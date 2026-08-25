@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 
 from src.llm import analyze_article
+from src.semantic import (
+    group_similar_topics,
+    get_representative_topic
+)
 
 
 # ============================================================
@@ -749,7 +753,6 @@ else:
                 "📈 Primary Frame Distribution"
             )
 
-
             frame_counts = (
                 df["Primary Frame"]
                 .value_counts()
@@ -757,11 +760,248 @@ else:
                 .reset_index(name="Contents")
             )
 
-
             st.bar_chart(
                 frame_counts,
                 x="Frame",
                 y="Contents",
                 horizontal=True,
+                use_container_width=True
+            )
+
+            # ------------------------------------------------
+            # Sentiment Distribution
+            # ------------------------------------------------
+
+            st.subheader(
+                "💭 Sentiment Distribution"
+            )
+
+            sentiment_counts = (
+                df["Sentiment"]
+                .value_counts()
+                .rename_axis("Sentiment")
+                .reset_index(name="Contents")
+            )
+
+            st.bar_chart(
+                sentiment_counts,
+                x="Sentiment",
+                y="Contents",
+                horizontal=True,
+                use_container_width=True
+            )
+
+            # ------------------------------------------------
+            # Search Intent Distribution
+            # ------------------------------------------------
+
+            st.subheader(
+                "🔍 Search Intent Distribution"
+            )
+
+            intent_counts = (
+                df["Search Intent"]
+                .value_counts()
+                .rename_axis("Search Intent")
+                .reset_index(name="Contents")
+            )
+
+            st.bar_chart(
+                intent_counts,
+                x="Search Intent",
+                y="Contents",
+                horizontal=True,
+                use_container_width=True
+            )
+
+            # ------------------------------------------------
+            # Cross-Content Insights
+            # ------------------------------------------------
+
+            st.subheader(
+                "💡 Cross-Content Insights"
+            )
+
+            # =================================================
+            # Shared Topics
+            # =================================================
+
+            st.markdown(
+                "### 🔗 Shared Topics"
+            )
+
+            topics = [
+                topic
+                for topic in df["Topic"].tolist()
+                if isinstance(topic, str)
+                   and topic.strip()
+            ]
+
+            if topics:
+
+                # ------------------------------------------------
+                # Semantic Topic Grouping
+                # ------------------------------------------------
+
+                topic_groups = group_similar_topics(
+                    topics,
+                    threshold=0.60
+                )
+
+                shared_groups = [
+                    group
+                    for group in topic_groups
+                    if len(group) > 1
+                ]
+
+                if shared_groups:
+
+                    for i, group in enumerate(
+                            shared_groups,
+                            1
+                    ):
+
+                        representative = (
+                            get_representative_topic(
+                                group
+                            )
+                        )
+
+                        st.markdown(
+                            f"**Topic Group {i}**"
+                        )
+
+                        st.write(
+                            f"Representative Topic: "
+                            f"**{representative}**"
+                        )
+
+                        for topic in group:
+                            st.write(
+                                f"- {topic}"
+                            )
+
+                        st.divider()
+
+                else:
+
+                    st.write(
+                        "No semantically shared topics "
+                        "were identified."
+                    )
+
+            else:
+
+                st.write(
+                    "No valid topics available."
+                )
+
+
+            # =================================================
+            # Sentiment Pattern
+            # =================================================
+
+            st.markdown(
+                "### 💭 Sentiment Pattern"
+            )
+
+            sentiment_counts = (
+                df["Sentiment"]
+                .value_counts()
+            )
+
+            dominant_sentiment = (
+                sentiment_counts.idxmax()
+            )
+
+            dominant_count = (
+                sentiment_counts.max()
+            )
+
+            total_contents = len(df)
+
+            dominant_percentage = (
+                    dominant_count /
+                    total_contents *
+                    100
+            )
+
+            st.write(
+                f"The content set is predominantly "
+                f"**{dominant_sentiment}**, with "
+                f"{dominant_count} of {total_contents} "
+                f"contents ({dominant_percentage:.0f}%)."
+            )
+
+            # =================================================
+            # Framing Differences
+            # =================================================
+
+            st.markdown(
+                "### 🧩 Framing Differences"
+            )
+
+            frame_by_type = pd.crosstab(
+                df["Content Type"],
+                df["Primary Frame"]
+            )
+
+            if not frame_by_type.empty:
+
+                st.dataframe(
+                    frame_by_type,
+                    use_container_width=True
+                )
+
+            else:
+
+                st.write(
+                    "No framing differences available."
+                )
+
+            # =================================================
+            # Content-Type Comparison
+            # =================================================
+
+            st.markdown(
+                "### 📚 Content-Type Comparison"
+            )
+
+            type_summary = (
+                df.groupby("Content Type")
+                .agg(
+                    Contents=("Content Type", "count"),
+                    Dominant_Sentiment=(
+                        "Sentiment",
+                        lambda x: x.mode().iloc[0]
+                        if not x.mode().empty
+                        else "Unknown"
+                    ),
+                    Dominant_Frame=(
+                        "Primary Frame",
+                        lambda x: x.mode().iloc[0]
+                        if not x.mode().empty
+                        else "Unknown"
+                    ),
+                    Dominant_Intent=(
+                        "Search Intent",
+                        lambda x: x.mode().iloc[0]
+                        if not x.mode().empty
+                        else "Unknown"
+                    )
+                )
+                .reset_index()
+            )
+
+            type_summary.columns = [
+                "Content Type",
+                "Contents",
+                "Dominant Sentiment",
+                "Dominant Frame",
+                "Dominant Search Intent"
+            ]
+
+            st.dataframe(
+                type_summary,
                 use_container_width=True
             )
