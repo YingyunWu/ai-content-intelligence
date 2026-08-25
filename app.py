@@ -73,3 +73,12 @@ if st.button("🔍 Analyze Article"):
 
         for need in result["audience_needs"]:
             st.write(f"- {need}")
+
+        st.subheader("🔎 Primary Keywords")
+        st.write(", ".join(result["primary_keywords"]))
+
+        st.subheader("🔗 Secondary Keywords")
+        st.write(", ".join(result["secondary_keywords"]))
+
+        st.subheader("🎯 Search Intent")
+        st.write(result["search_intent"])
